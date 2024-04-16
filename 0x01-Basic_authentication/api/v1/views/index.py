@@ -31,8 +31,11 @@ def unauthorized_endpoint():
     """ Endpoint to test unauthorized error handler """
     abort(401)
 
-@app_views.route('/forbidden', methods=['GET'])
-def forbidden_endpoint():
-    """ Endpoint to test forbidden error handler """
-    abort(403)
 
+@app_views.route('/forbidden/', strict_slashes=False)
+def forbidden() -> None:
+    """GET /api/v1/forbidden
+    Return:
+      - Forbidden error.
+    """
+    abort(403)
