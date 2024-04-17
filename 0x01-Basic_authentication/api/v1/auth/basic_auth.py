@@ -86,11 +86,4 @@ class BasicAuth(Auth):
         email, password = self.extract_user_credentials(auth_token)
         return self.user_object_from_credentials(email, password)
 
-user_email = "bob@hbtn.io"
-user_clear_pwd = "H0lbertonSchool98!"
-
-user = User()
-user.email = user_email
-user.password = user_clear_pwd
-print("New user: {}".format(user.id))
-user.save()       
+      

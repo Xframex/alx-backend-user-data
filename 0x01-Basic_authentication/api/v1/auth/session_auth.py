@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+"""Session authentication module for the API.
+"""
+from api.v1.auth.auth import Auth
+
+auth = Auth()
+
+class SessionAuth(Auth):
+    """Session authentication class.
+    """
+    pass
