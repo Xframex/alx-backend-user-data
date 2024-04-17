@@ -1,44 +1,38 @@
 #!/usr/bin/env python3
-"""Auth module for the API"""
-
-from flask import request
+"""Authentication module for the API.
+"""
+import re
 from typing import List, TypeVar
+from flask import request
 
 
 class Auth:
-    """Auth class"""
-
+    """Authentication class.
+    """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """Require authentication"""
-        if path is None or excluded_paths is None or excluded_paths == []:
-            return True
-        if path[-1] != '/':
-            path += '/'
-        if path in excluded_paths:
-            return False
+        """Checks if a path requires authentication.
+        """
+        if path is not None and excluded_paths is not None:
+            for exclusion_path in map(lambda x: x.strip(), excluded_paths):
+                pattern = ''
+                if exclusion_path[-1] == '*':
+                    pattern = '{}.*'.format(exclusion_path[0:-1])
+                elif exclusion_path[-1] == '/':
+                    pattern = '{}/*'.format(exclusion_path[0:-1])
+                else:
+                    pattern = '{}/*'.format(exclusion_path)
+                if re.match(pattern, path):
+                    return False
         return True
 
     def authorization_header(self, request=None) -> str:
-        """Authorization header"""
-        if request is None or 'Authorization' not in request.headers:
-            return None
-        return request.headers.get('Authorization', None)
+        """Gets the authorization header field from the request.
+        """
+        if request is not None:
+            return request.headers.get('Authorization', None)
+        return None
 
     def current_user(self, request=None) -> TypeVar('User'):
-<<<<<<< HEAD
-        """Current user
+        """Gets the current user from the request.
         """
         return None
-    
-a = Auth()
-print(a.require_auth(None, None))
-print(a.require_auth(None, []))
-print(a.require_auth("/api/v1/status/", []))
-print(a.require_auth("/api/v1/status/", ["/api/v1/status/"]))
-print(a.require_auth("/api/v1/status", ["/api/v1/status/"]))
-print(a.require_auth("/api/v1/users", ["/api/v1/status/"]))
-print(a.require_auth("/api/v1/users", ["/api/v1/status/", "/api/v1/stats"]))    
-=======
-        """Current user"""
-        return None
->>>>>>> d79a2c4b1cd4c6f6f9ee8b0017cadc23b4859159
