@@ -6,8 +6,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from user import User
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.sql.expression import tuple_
 
-from user import Base
+from user import Base, User
 
 
 class DB:
@@ -42,3 +45,20 @@ class DB:
             self._session.rollback()
             new_user = None
         return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """Finds a user based on a set of filters.
+        """
+        elements, values = [], []
+        for key, value in kwargs.items():
+            if hasattr(User, key):
+                elements.append(getattr(User, key))
+                values.append(value)
+            else:
+                raise InvalidRequestError()
+        result = self._session.query(User).filter(
+            tuple_(*elements).in_([tuple(values)])
+        ).first()
+        if result is None:
+            raise NoResultFound()
+        return result
