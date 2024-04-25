@@ -33,7 +33,7 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
-        """Adds a new user to the database.
+        """Add user record to database
         """
         try:
             new_user = User(email=email, hashed_password=hashed_password)
@@ -62,7 +62,7 @@ class DB:
         return result
 
     def update_user(self, user_id: int, **kwargs) -> None:
-        """Updates a user based on a given id.
+        """Updates a user based on find_user method
         """
         user = self.find_user_by(id=user_id)
         if user is None:
