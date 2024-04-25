@@ -10,7 +10,7 @@ from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql.expression import tuple_
 
-from user import Base, User
+from user import Base
 
 
 class DB:
@@ -47,17 +47,17 @@ class DB:
         return user
 
     def find_user_by(self, **kwargs) -> User:
-        """Finds a user based on a set of filters.
+        """Finds a user by a given attribute
         """
-        elements, values = [], []
+        fields, values = [], []
         for key, value in kwargs.items():
             if hasattr(User, key):
-                elements.append(getattr(User, key))
+                fields.append(getattr(User, key))
                 values.append(value)
             else:
                 raise InvalidRequestError()
         result = self._session.query(User).filter(
-            tuple_(*elements).in_([tuple(values)])
+            tuple_(*fields).in_([tuple(values)])
         ).first()
         if result is None:
             raise NoResultFound()
