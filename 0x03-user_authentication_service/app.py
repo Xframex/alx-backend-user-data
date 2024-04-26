@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
+"""A simple Flask app with user authentication features.
+"""
+from flask import Flask, jsonify, request, abort, redirect
 
-from flask import Flask, request, jsonify, redirect
 from auth import Auth
 
-app = Flask(__name__)
-auth = Auth()
 
-@app.route("/", methdos=["GET"], strict_slashes=False)
+app = Flask(__name__)
+AUTH = Auth()
+
+
+@app.route("/", methods=["GET"], strict_slashes=False)
 def index() -> str:
-    return jsonify ({"message": "Bienvenue"})
+    """GET / method
+    Return:
+         welcome home message
+    """
+    return jsonify({"message": "Bienvenue"})
 
 
 if __name__ == "__main__":
